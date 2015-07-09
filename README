@@ -1,0 +1,8 @@
+PHP file tools
+===================
+
+Early commit here, but so far it's basically just a script to list the most recent files in a directory tree. 
+
+I wrote this for my local sailing club's website in order to display race results in the site's main CMS. This is the web service part.
+
+More soon.
