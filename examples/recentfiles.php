@@ -15,7 +15,7 @@ try {
 
     $res = array(
         'error' => 0,
-        'data' => getFiles($count, '../../')
+        'data' => getFiles($count, '../2015')
     );
 
 } catch (Exception $e) {

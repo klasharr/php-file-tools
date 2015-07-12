@@ -32,6 +32,7 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
             'date' => date("F j, g:i a", $file->getMTime()),
             'timestamp' => $file->getMTime(),
             'link' => $this->opt['base_url'] . str_replace(DIRECTORY_SEPARATOR, '/', $filename),
+            'segments' => $this->getSegments($filename),
         );
 
         $this->logger->addDebug($file->getFilename() . ' ' . date("F j, g:i a", $file->getMTime()));
@@ -42,6 +43,21 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
     {
         return $this->number_files_processed;
     }
+
+    /**
+     * @param $filename
+     * @return array
+     */
+    public function getSegments($filename)
+    {
+        $filename = str_replace('.htm', '', $filename);
+        $out = explode(DIRECTORY_SEPARATOR, $filename);
+        foreach ($out as &$segment) {
+            $segment = $this->getFriendlyFileName($segment);
+        }
+        return $out;
+    }
+
 
     /**
      * @param $file string
@@ -64,11 +80,13 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
             );
         }
 
-        return str_replace(
+        $tmp1 = str_replace(
             array('And', 'To', 'For', 'From', 'Of'),
             array('and', 'to', 'for', 'from', 'of'),
             ucwords($tmp)
         );
+
+        return preg_replace('/([a-z]+)(\d+)$/i', '$1 $2', $tmp1);
     }
 
     /**
