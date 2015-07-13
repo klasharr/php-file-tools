@@ -12,31 +12,74 @@ use Chalky\Processor\ProcessorInterface;
 class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
 {
 
+    /**
+     * @var int
+     */
     protected $number_files_processed = 0;
 
+    /**
+     * Holds the final data array which gets returned
+     * @var array
+     */
     protected $files = array();
 
+    /**
+     * The keys for each entry in $files. Used to ensure key uniqueness in case
+     * file timestamps are the same
+     * @var array
+     */
     static $keys = array();
 
+    /**
+     * Replacements used to generate the friendly filename e.g. summary.htm -> summary
+     * @var array
+     */
+    private $friendly_filename_replacements = array(
+        array('.htm','.html'), array('','')
+        );
+
+    /**
+     * @param $sSourceDir
+     * @param Logger $logger
+     * @param array $opt
+     * @throws \Exception
+     */
     public function __construct($sSourceDir, Logger $logger, $opt = array())
     {
         parent::__construct($sSourceDir, $logger, $opt);
     }
 
+    /**
+     * @param \SplFileInfo $file
+     */
     public function process(\SplFileInfo $file)
     {
-        $filename = ltrim(str_replace($this->source_dir, '', $file->getPathname()), DIRECTORY_SEPARATOR);
+
+        $localFilePath = $this->getLocalFilePath($file);
 
         $this->files[$this->getKey($file)] = array(
-            'file' => $this->getFriendlyFileName($filename),
+            'friendly_path' => $this->getFriendlyFileName($localFilePath),
             'date' => date("F j, g:i a", $file->getMTime()),
             'timestamp' => $file->getMTime(),
-            'link' => $this->opt['base_url'] . str_replace(DIRECTORY_SEPARATOR, '/', $filename),
-            'segments' => $this->getSegments($filename),
+            'link' => $this->opt['base_url'] . str_replace(DIRECTORY_SEPARATOR, '/', $localFilePath),
+            'path_segments' => $this->getSegments($localFilePath),
+            'friendly_file_name' => $this->getSegments($localFilePath, true),
         );
 
         $this->logger->addDebug($file->getFilename() . ' ' . date("F j, g:i a", $file->getMTime()));
         $this->num_files_processed++;
+    }
+
+    /**
+     * /path/to/your/app/Cup Races/1974_cup.htm
+     * becomes
+     * /Cup Races/1974_cup.htm
+     *
+     * @param \SplFileInfo $file
+     * @return string
+     */
+    private function getLocalFilePath(\SplFileInfo $file){
+        return ltrim(str_replace($this->source_dir, '', $file->getPathname()), DIRECTORY_SEPARATOR);
     }
 
     public function getNumberFilesProcessed()
@@ -45,19 +88,29 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
     }
 
     /**
+     * Returns either a friendly filename or the path (before the filename) in an array
+     * e.g. for a path like this /2015/Sunday Series/Summer Sunday Series/summary.htm
+     * with the returned array would be
+     * array( "2015", "Sunday Series", "Summer Sunday Series" );
+     *
      * @param $filename
-     * @return array
+     * @param bool $fileonly
+     * @return array|mixed
      */
-    public function getSegments($filename)
-    {
-        $filename = str_replace('.htm', '', $filename);
+    private function getSegments($filename, $fileonly = false){
+
+        $filename = str_replace(
+          $this->friendly_filename_replacements[0],
+          $this->friendly_filename_replacements[1], $filename
+        );
+
         $out = explode(DIRECTORY_SEPARATOR, $filename);
         foreach ($out as &$segment) {
             $segment = $this->getFriendlyFileName($segment);
         }
-        return $out;
+        $last = array_pop($out);
+        return $fileonly ? $last : $out;
     }
-
 
     /**
      * @param $file string
@@ -97,7 +150,6 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
      */
     private function getKey(\SplFileInfo $file)
     {
-
         $time = $file->getMTime() * 100;
 
         while (true) {
@@ -108,19 +160,16 @@ class MostRecentFiles extends AbstractProcessor implements ProcessorInterface
         }
 
         self::$keys[] = $time;
-
         return $time;
     }
 
     /**
-     * @return array of most recently altered files
+     * @return array of most recently altered files based on file modified time.
      */
     public function getLatestFiles()
     {
         krsort($this->files);
-
         return array_slice($this->files, 0, $this->opt['number']);
-
     }
 
 }
