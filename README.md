@@ -6,7 +6,6 @@ I wrote this to make it easier to publish sailing race results to the website of
 
 
 ## Live Example
-------------
 
 Race results files are published to a subdomain here: [http://results.swanagesailingclub.org.uk/](http://results.swanagesailingclub.org.uk/)
 
@@ -15,16 +14,14 @@ The list webservice running code in this repository is here: [http://results.swa
 The results are then displayed nicely from a custom module on the main site here: [http://www.swanagesailingclub.org.uk/](http://www.swanagesailingclub.org.uk/) , you're looking at the latest results panel. And also here: [http://www.swanagesailingclub.org.uk/sailing/results-archive](http://www.swanagesailingclub.org.uk/sailing/results-archive).
 
 ## Installation
-------------
 
 Not quite ready for public use yet as of 14th July 2015. Come back soon.
 
 
 ## Future developments
--------------------
 
 I have some other processors in development e.g. for resizing images, or generating thumbnail galleries. That's to follow.
 
 ## Support
---------
+
 Feel free to create an issue, or contact me: [http://www.klausharris.de/contact](http://www.klausharris.de/contact)
