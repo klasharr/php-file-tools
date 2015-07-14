@@ -1,8 +1,30 @@
-PHP file tools
-===================
+# PHP file tools
 
-Early commit here, but so far it's basically just a script to list the most recent files in a directory tree. 
+Currently this repository contains some classes and a simple webservice script to return the last modified files under a directory (recursively) in json format. 
 
-I wrote this for my local sailing club's website in order to display race results in the site's main CMS. This is the web service part.
+I wrote this to make it easier to publish sailing race results to the website of my local sailing club. The idea is that we  publish results via FTP to a separate 'results' subdomain, then pull in the latest results list via this web service into the website. The main website runs on Drupal 7 and I wrote a module to consume the web service and display the data, check out my php-drupal7-ssc repository.
 
-More soon.
+
+## Live Example
+------------
+
+Race results files are published to a subdomain here: [http://results.swanagesailingclub.org.uk/](http://results.swanagesailingclub.org.uk/)
+
+The list webservice running code in this repository is here: [http://results.swanagesailingclub.org.uk/list/](http://results.swanagesailingclub.org.uk/list/)
+
+The results are then displayed nicely from a custom module on the main site here: [http://www.swanagesailingclub.org.uk/](http://www.swanagesailingclub.org.uk/) , you're looking at the latest results panel. And also here: [http://www.swanagesailingclub.org.uk/sailing/results-archive](http://www.swanagesailingclub.org.uk/sailing/results-archive).
+
+## Installation
+------------
+
+Not quite ready for public use yet as of 14th July 2015. Come back soon.
+
+
+## Future developments
+-------------------
+
+I have some other processors in development e.g. for resizing images, or generating thumbnail galleries. That's to follow.
+
+## Support
+--------
+Feel free to create an issue, or contact me: [http://www.klausharris.de/contact](http://www.klausharris.de/contact)
