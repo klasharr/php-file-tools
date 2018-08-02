@@ -2,7 +2,7 @@
 
 Currently this repository contains some classes and a simple webservice script to return the last modified files under a directory (recursively) in json format. 
 
-I wrote this to make it easier to publish sailing race results to the website of my local sailing club. The idea is that we  publish results via FTP to a separate 'results' subdomain, then pull in the latest results list via this web service into the website. The main website runs on Drupal 7 and I wrote a module to consume the web service and display the data, check out my php-drupal7-ssc repository.
+It could be extended to do anything with files in a directory tree.
 
 ## Live Example
 
